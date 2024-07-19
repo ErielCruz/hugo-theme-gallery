@@ -482,6 +482,30 @@ section.gallery {
   }
 }
 
+.video-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.video-item {
+  width: 100%;
+}
+
+.video-item p {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .video-gallery {
+    grid-template-columns: 1fr;
+  }
+} 
+
 .hidden {
   display: none;
 }

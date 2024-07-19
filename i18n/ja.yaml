@@ -11,5 +11,11 @@ downloadTitle: ダウンロード
 relatedAlbums: 似たようなアルバム
 photoCount:
   other: "写真{{ . }}枚"
+videoCount:
+  one: 1 video
+  other: "{{ . }} videos"
+contentCount:
+  other: "{{ .photoCount }}{{ if and (gt .photoCount \"0\") (gt .videoCount \"0\") }} and {{ .videoCount }}{{ end }}"
 albumCount:
-  other: "{{ .count }}枚のアルバムに{{ .photoCount }}"
+  one: "{{ .contentCount }} in {{ .count }} album"
+  other: "{{ .contentCount }} in {{ .count }} albums"

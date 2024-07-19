@@ -59,6 +59,33 @@
     </div>
    
   {{ end }}
+
+  {{ if .Params.videos }}
+
+    <hgroup style="margin-top: 4rem">
+      <h2>Videos</h2>
+    </hgroup>
+    <div class="video-gallery">
+      {{ range .Params.videos }}
+        <div class="video-item">
+          <div style="position:relative;padding-top:56.25%;">
+            <iframe src="https://iframe.mediadelivery.net/embed/273351/{{ .video_id }}?autoplay=false&loop=false&muted=false&preload=true&responsive=true" 
+                    loading="lazy" 
+                    style="border:0;position:absolute;top:0;height:100%;width:100%;" 
+                    allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" 
+                    allowfullscreen="true">
+            </iframe>
+          </div>
+          <p>{{ .title }}</p>
+        </div>
+      {{ end }}
+    </div>
+
+    <div style="display: flex; justify-content: center; margin-top: 28px;">
+      <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="erielcruz" data-color="#5F7FFF" data-emoji="☕"  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00" ></script>
+    </div>
+    
+  {{ end }}
 </section>
 
 <div id="spinner"></div>

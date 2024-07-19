@@ -10,10 +10,13 @@
         <div>
           <h2>{{ .Title }}</h2>
           <p>
+            {{ $photoCount := T "photoCount" $gallery.imageCount }}
+            {{ $videoCount := T "videoCount" $gallery.videoCount }}
+            {{ $contentCount := T "contentCount" (dict "photoCount" $photoCount "videoCount" (cond (gt $gallery.videoCount 0) $videoCount "")) }}
             {{ if gt $gallery.albumCount 0 }}
-              {{ T "albumCount" (dict "count" ($gallery.albumCount | lang.FormatNumber 0) "photoCount" ($gallery.imageCount | lang.FormatNumber 0 | lang.Translate "photoCount")) }}
+              {{ T "albumCount" (dict "count" $gallery.albumCount "contentCount" $contentCount) }}
             {{ else }}
-              {{ T "photoCount" ($gallery.imageCount | lang.FormatNumber 0) }}
+              {{ $contentCount }}
             {{ end }}
           </p>
         </div>

@@ -12,6 +12,11 @@ relatedAlbums: Albums similaires
 photoCount:
   one: 1 photo
   other: "{{ . }} photos"
+videoCount:
+  one: 1 vidéo
+  other: "{{ . }} vidéos"
+contentCount:
+  other: "{{ .photoCount }}{{ if and (gt .photoCount \"0\") (gt .videoCount \"0\") }} et {{ .videoCount }}{{ end }}"
 albumCount:
-  one: "{{ .photoCount }} dans {{ .count }} album"
-  other: "{{ .photoCount }} dans {{ .count }} albums"
+  one: "{{ .contentCount }} dans {{ .count }} album"
+  other: "{{ .contentCount }} dans {{ .count }} albums"

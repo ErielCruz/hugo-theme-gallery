@@ -11,5 +11,11 @@ downloadTitle: 下载
 relatedAlbums: 相关相册
 photoCount:
   other: "{{ . }} 张照片"
+videoCount:
+  one: 1 video
+  other: "{{ . }} videos"
+contentCount:
+  other: "{{ .photoCount }}{{ if and (gt .photoCount \"0\") (gt .videoCount \"0\") }} and {{ .videoCount }}{{ end }}"
 albumCount:
-  other: "{{ .count }} 个相册，共计 {{ .photoCount }}"
+  one: "{{ .contentCount }} in {{ .count }} album"
+  other: "{{ .contentCount }} in {{ .count }} albums"

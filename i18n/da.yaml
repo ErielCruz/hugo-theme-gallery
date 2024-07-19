@@ -12,6 +12,11 @@ relatedAlbums: Lignende albums
 photoCount:
   one: 1 billede
   other: "{{ . }} billeder"
+videoCount:
+  one: 1 video
+  other: "{{ . }} videoer"
+contentCount:
+  other: "{{ .photoCount }}{{ if and (gt .photoCount \"0\") (gt .videoCount \"0\") }} og {{ .videoCount }}{{ end }}"
 albumCount:
-  one: "{{ .photoCount }} i {{ .count }} album"
-  other: "{{ .photoCount }} i {{ .count }} albummer"
+  one: "{{ .contentCount }} i {{ .count }} album"
+  other: "{{ .contentCount }} i {{ .count }} albummer"
