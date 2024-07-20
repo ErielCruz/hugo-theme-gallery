@@ -71,7 +71,7 @@ if (gallery) {
   };
 
   lightbox.on("change", () => {
-    history.replaceState("", document.title, "#" + lightbox.pswp.currSlide.index);
+    history.replaceState("", document.title, "#" + (lightbox.pswp.currSlide.index + 1));
   });
 
   lightbox.on("close", () => {
@@ -88,7 +88,7 @@ if (gallery) {
   lightbox.init();
 
   if (window.location.hash.substring(1).length > 0) {
-    const index = parseInt(window.location.hash.substring(1), 10);
+    const index = parseInt(window.location.hash.substring(1), 10) - 1;
     if (!Number.isNaN(index) && index >= 0 && index < gallery.querySelectorAll("a").length) {
       lightbox.loadAndOpen(index, { gallery });
     }
