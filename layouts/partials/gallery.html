@@ -20,14 +20,14 @@
         )
       }}
     {{ end }}
-    {{ $first := true }}
+    {{ $counter := 0 }}
     {{ range sort $images (.Params.sort_by | default "Name") (.Params.sort_order | default "asc") }}
       {{ $image := .image }}
       {{ $thumbnail := $image.Filter (slice images.AutoOrient (images.Process "fit 600x600 webp")) }}
       {{ $full := $image.Filter (slice images.AutoOrient (images.Process "fit 1600x1600 webp")) }}
       {{ $color := index $thumbnail.Colors 0 | default "transparent" }}
       <a class="gallery-item" href="{{ $image.RelPermalink }}" data-pswp-src="{{ $full.RelPermalink }}" data-pswp-width="{{ $full.Width }}" data-pswp-height="{{ $full.Height }}" title="{{ .Title }}" itemscope itemtype="https://schema.org/ImageObject" style="aspect-ratio: {{ $thumbnail.Width }} / {{ $thumbnail.Height }}; background-color: {{ $color }}">
-        <img {{ if $first }}width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"{{ else }}loading="lazy" width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"{{ end }} src="{{ $thumbnail.RelPermalink }}" alt="{{ .Title }}" data-original-src="{{ $image.RelPermalink }}" />
+        <img {{ if lt $counter 6 }}width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"{{ else }}loading="lazy" width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"{{ end }} src="{{ $thumbnail.RelPermalink }}" alt="{{ .Title }}" data-original-src="{{ $image.RelPermalink }}" />
         <meta itemprop="contentUrl" content="{{ $image.RelPermalink }}" />
         {{ with site.Params.Author }}
           <span itemprop="creator" itemtype="https://schema.org/Person" itemscope>
@@ -35,7 +35,7 @@
           </span>
         {{ end }}
       </a>
-      {{ $first = false }}
+      {{ $counter = add $counter 1 }}
     {{ end }}
   </div>
 
