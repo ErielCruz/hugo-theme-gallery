@@ -20,13 +20,14 @@
         )
       }}
     {{ end }}
+    {{ $first := true }}
     {{ range sort $images (.Params.sort_by | default "Name") (.Params.sort_order | default "asc") }}
       {{ $image := .image }}
       {{ $thumbnail := $image.Filter (slice images.AutoOrient (images.Process "fit 600x600 webp")) }}
       {{ $full := $image.Filter (slice images.AutoOrient (images.Process "fit 1600x1600 webp")) }}
       {{ $color := index $thumbnail.Colors 0 | default "transparent" }}
       <a class="gallery-item" href="{{ $image.RelPermalink }}" data-pswp-src="{{ $full.RelPermalink }}" data-pswp-width="{{ $full.Width }}" data-pswp-height="{{ $full.Height }}" title="{{ .Title }}" itemscope itemtype="https://schema.org/ImageObject" style="aspect-ratio: {{ $thumbnail.Width }} / {{ $thumbnail.Height }}; background-color: {{ $color }}">
-        <img loading="lazy" width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}" src="{{ $thumbnail.RelPermalink }}" alt="{{ .Title }}" data-original-src="{{ $image.RelPermalink }}" />
+        <img {{ if $first }}width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"{{ else }}loading="lazy" width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"{{ end }} src="{{ $thumbnail.RelPermalink }}" alt="{{ .Title }}" data-original-src="{{ $image.RelPermalink }}" />
         <meta itemprop="contentUrl" content="{{ $image.RelPermalink }}" />
         {{ with site.Params.Author }}
           <span itemprop="creator" itemtype="https://schema.org/Person" itemscope>
@@ -34,6 +35,7 @@
           </span>
         {{ end }}
       </a>
+      {{ $first = false }}
     {{ end }}
   </div>
 
@@ -80,7 +82,7 @@
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
 
 {{ $lightboxJs := resources.Get "js/lightbox.js" | js.Build (dict "minify" true) | resources.Fingerprint }}
-<script src="{{ $lightboxJs.RelPermalink }}" defer></script>
+<script defer src="{{ $lightboxJs.RelPermalink }}"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
