@@ -1,6 +1,5 @@
 <section class="gallery">
-
-  <div id="gallery" style="visibility: hidden; height: 1px; overflow: hidden" image-download="{{ .Params.download | default false }}">
+  <div id="gallery" style="opacity: 0; transition: opacity 0.5s ease-in-out; height: auto; overflow: hidden" image-download="{{ .Params.download | default false }}">
     {{ $images := slice }}
     {{ range $image :=  .Resources.ByType "image" }}
       {{ $title := "" }}
@@ -26,8 +25,8 @@
       {{ $thumbnail := $image.Filter (slice images.AutoOrient (images.Process "fit 600x600 webp")) }}
       {{ $full := $image.Filter (slice images.AutoOrient (images.Process "fit 1600x1600 webp")) }}
       {{ $color := index $thumbnail.Colors 0 | default "transparent" }}
-      <a class="gallery-item" href="{{ $image.RelPermalink }}" data-pswp-src="{{ $full.RelPermalink }}" data-pswp-width="{{ $full.Width }}" data-pswp-height="{{ $full.Height }}" title="{{ .Title }}" itemscope itemtype="https://schema.org/ImageObject" style="aspect-ratio: {{ $thumbnail.Width }} / {{ $thumbnail.Height }}">
-        <img loading="lazy" width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}" src="{{ $thumbnail.RelPermalink }}" style="background-color: {{ $color }}" alt="{{ .Title }}" data-original-src="{{ $image.RelPermalink }}" />
+      <a class="gallery-item" href="{{ $image.RelPermalink }}" data-pswp-src="{{ $full.RelPermalink }}" data-pswp-width="{{ $full.Width }}" data-pswp-height="{{ $full.Height }}" title="{{ .Title }}" itemscope itemtype="https://schema.org/ImageObject" style="aspect-ratio: {{ $thumbnail.Width }} / {{ $thumbnail.Height }}; background-color: {{ $color }}">
+        <img loading="lazy" width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}" src="{{ $thumbnail.RelPermalink }}" alt="{{ .Title }}" data-original-src="{{ $image.RelPermalink }}" />
         <meta itemprop="contentUrl" content="{{ $image.RelPermalink }}" />
         {{ with site.Params.Author }}
           <span itemprop="creator" itemtype="https://schema.org/Person" itemscope>
@@ -39,7 +38,6 @@
   </div>
 
   {{ if .Params.download_all }}  
-
     <div style="display: flex; justify-content: center; margin-top: 48px;">
       <button id="download-all" style="background-color: #722F37; color: white; border: none; padding: 12px 24px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 12px;">
         Download All Images
@@ -49,7 +47,6 @@
     <div style="display: flex; justify-content: center; margin-top: 28px;">
       <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="erielcruz" data-color="#5F7FFF" data-emoji="☕"  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00" ></script>
     </div>
-   
   {{ end }}
 
   {{ if .Params.videos }}
@@ -69,13 +66,10 @@
     {{ end }}
 
     {{ if .Params.download_all }}  
-
     <div style="display: flex; justify-content: center; margin-top: 28px; margin-bottom: 32px;">
       <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="erielcruz" data-color="#5F7FFF" data-emoji="☕"  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00" ></script>
     </div>
-   
     {{ end }}
-
   {{ end }}
 </section>
 
@@ -90,6 +84,9 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    const gallery = document.getElementById("gallery");
+    gallery.style.opacity = "1";
+
     const downloadAllButton = document.getElementById("download-all");
     const spinner = document.getElementById("spinner");
 
@@ -236,4 +233,4 @@
     // Initial load
     loadVideos();
   });
-  </script>
+</script>
