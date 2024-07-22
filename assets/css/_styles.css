@@ -317,6 +317,28 @@ hgroup {
   }
 }
 
+hgroup.video-header {
+  gap: 0.5rem; /* Reduce gap between h2 and p */
+  margin-bottom: 1.5rem; /* Adjust overall bottom margin */
+}
+
+hgroup.video-header h2 {
+  margin-bottom: 0; /* Remove bottom margin from h2 */
+}
+
+hgroup.video-header p {
+  margin-top: 0; /* Remove top margin from p */
+  font-size: 0.9em; /* Slightly smaller font for counter */
+  color: var(--text-2); /* Use your existing color variable */
+}
+
+/* Adjust for larger screens if needed */
+@media (min-width: 768px) {
+  hgroup.video-header p {
+    font-size: 1em; /* Slightly larger font on bigger screens */
+  }
+}
+
 main > section {
   margin: 0rem auto 2rem;
   padding-right: 1.5rem;
