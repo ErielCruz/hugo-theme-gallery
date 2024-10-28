@@ -2,7 +2,8 @@
   <div id="gallery" 
        style="opacity: 0; transition: opacity 0.5s ease-in-out; height: auto; overflow: hidden" 
        image-download="{{ .Params.download | default false }}"
-       image-feedback="{{ .Params.feedback | default false }}">
+       image-feedback="{{ .Params.feedback | default false }}"
+       data-gallery-name="{{ .File.ContentBaseName }}">
     {{ $images := slice }}
     {{ range $image :=  .Resources.ByType "image" }}
       {{ $title := "" }}

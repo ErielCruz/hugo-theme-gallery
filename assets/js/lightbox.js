@@ -4,11 +4,31 @@ import PhotoSwipeDynamicCaption from "./photoswipe/photoswipe-dynamic-caption-pl
 import * as params from "@params";
 
 // Fix: Remove trailing slash from worker URL
-const WORKER_URL = 'https://photo-feedback.main-domains.workers.dev'; // Your actual worker URL
+const WORKER_URL = 'https://photo-feedback.main-domains.workers.dev';
 
 // Helper function to construct API URLs correctly
 function getApiUrl(endpoint) {
   return `${WORKER_URL}/api/${endpoint}`.replace(/([^:]\/)\/+/g, "$1");
+}
+
+// Helper function to get gallery name with better fallback logic
+function getGalleryName(gallery) {
+  // First try to get the explicitly set gallery name
+  const galleryName = gallery.getAttribute('data-gallery-name');
+  
+  if (galleryName && galleryName.trim() !== '') {
+    return galleryName;
+  }
+  
+  // If no gallery name is set, try to get it from the URL path
+  const pathSegments = window.location.pathname.split('/').filter(segment => segment);
+  if (pathSegments.length > 0) {
+    // Use the last segment of the path (usually the page name)
+    return pathSegments[pathSegments.length - 1];
+  }
+  
+  // Final fallback
+  return 'default';
 }
 
 const sessionId = localStorage.getItem('feedbackSessionId') || 
@@ -22,6 +42,9 @@ async function sendFeedback(reaction, photoId, buttonElement, pswp) {
     return;
   }
 
+  const gallery = document.getElementById("gallery");
+  const galleryName = getGalleryName(gallery);
+
   try {
     const response = await fetch(getApiUrl('feedback'), {
       method: 'POST',
@@ -29,7 +52,8 @@ async function sendFeedback(reaction, photoId, buttonElement, pswp) {
       body: JSON.stringify({
         photoId,
         reaction,
-        sessionId
+        sessionId,
+        galleryName
       })
     });
 
@@ -87,81 +111,79 @@ if (gallery) {
     errorMsg: params.errorMsg,
   });
 
+  // Only register feedback buttons if galleryFeedback is true
+  if (galleryFeedback) {
+    lightbox.on("uiRegister", () => {
+      // Keep Button (checkmark)
+      lightbox.pswp.ui.registerElement({
+        name: "keep-button",
+        order: 7,
+        isButton: true,
+        html: {
+          isCustomSVG: true,
+          inner: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
+                    <use class="pswp__icn-shadow"></use>
+                    <path d="M13 19.17l-3.17-3.17-1.41 1.41L13 22 23 12l-1.41-1.41z" id="pswp__icn-keep"></path>
+                  </svg>`,
+          outlineID: "pswp__icn-keep"
+        },
+        onInit: (el, pswp) => {
+          el.setAttribute("title", "Keep");
+          el.className = "pswp__button pswp__button--keep";
+          el.addEventListener('click', () => {
+            const photoId = getPhotoId(pswp.currSlide.data.element);
+            sendFeedback('keep', photoId, el, pswp);
+          });
+        }
+      });
 
-// Only register feedback buttons if galleryFeedback is true
-if (galleryFeedback) {
-  lightbox.on("uiRegister", () => {
-    // Keep Button (checkmark)
-    lightbox.pswp.ui.registerElement({
-      name: "keep-button",
-      order: 7,
-      isButton: true,
-      html: {
-        isCustomSVG: true,
-        inner: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
-                  <use class="pswp__icn-shadow"></use>
-                  <path d="M13 19.17l-3.17-3.17-1.41 1.41L13 22 23 12l-1.41-1.41z" id="pswp__icn-keep"></path>
-                </svg>`,
-        outlineID: "pswp__icn-keep"
-      },
-      onInit: (el, pswp) => {
-        el.setAttribute("title", "Keep");
-        el.className = "pswp__button pswp__button--keep";
-        el.addEventListener('click', () => {
-          const photoId = getPhotoId(pswp.currSlide.data.element);
-          sendFeedback('keep', photoId, el, pswp);
-        });
-      }
-    });
+      // Like Button (star)
+      lightbox.pswp.ui.registerElement({
+        name: "like-button",
+        order: 7,
+        isButton: true,
+        html: {
+          isCustomSVG: true,
+          inner: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
+                    <use class="pswp__icn-shadow"></use>
+                    <path d="M16 8.2l2.17 5.35 5.63 0.47-4.28 3.7 0.13 5.63L16 20.85l-4.85 2.5 0.13-5.63-4.28-3.7 5.63-0.47z" id="pswp__icn-like"></path>
+                  </svg>`,
+          outlineID: "pswp__icn-like"
+        },
+        onInit: (el, pswp) => {
+          el.setAttribute("title", "Like");
+          el.className = "pswp__button pswp__button--like";
+          el.addEventListener('click', () => {
+            const photoId = getPhotoId(pswp.currSlide.data.element);
+            sendFeedback('like', photoId, el, pswp);
+          });
+        }
+      });
 
-    // Like Button (star)
-    lightbox.pswp.ui.registerElement({
-      name: "like-button",
-      order: 7,
-      isButton: true,
-      html: {
-        isCustomSVG: true,
-        // Like Button (star) - adjusted path for proper vertical alignment
-        inner: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
-                  <use class="pswp__icn-shadow"></use>
-                  <path d="M16 8.2l2.17 5.35 5.63 0.47-4.28 3.7 0.13 5.63L16 20.85l-4.85 2.5 0.13-5.63-4.28-3.7 5.63-0.47z" id="pswp__icn-like"></path>
-                </svg>`,
-        outlineID: "pswp__icn-like"
-      },
-      onInit: (el, pswp) => {
-        el.setAttribute("title", "Like");
-        el.className = "pswp__button pswp__button--like";
-        el.addEventListener('click', () => {
-          const photoId = getPhotoId(pswp.currSlide.data.element);
-          sendFeedback('like', photoId, el, pswp);
-        });
-      }
+      // Love Button (heart)
+      lightbox.pswp.ui.registerElement({
+        name: "love-button",
+        order: 7,
+        isButton: true,
+        html: {
+          isCustomSVG: true,
+          inner: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
+                    <use class="pswp__icn-shadow"></use>
+                    <path d="M16 23.35l-1.45-1.32C10.4 18.36 8 15.28 8 12.5 8 10.42 9.42 9 11.5 9c1.74 0 3.41.81 4.5 2.09C17.09 9.81 18.76 9 20.5 9 22.58 9 24 10.42 24 12.5c0 2.78-2.4 5.86-6.55 9.54L16 23.35z" id="pswp__icn-love"></path>
+                  </svg>`,
+          outlineID: "pswp__icn-love"
+        },
+        onInit: (el, pswp) => {
+          el.setAttribute("title", "Love");
+          el.className = "pswp__button pswp__button--love";
+          el.addEventListener('click', () => {
+            const photoId = getPhotoId(pswp.currSlide.data.element);
+            sendFeedback('love', photoId, el, pswp);
+          });
+        }
+      });
     });
-
-    // Love Button (heart)
-    lightbox.pswp.ui.registerElement({
-      name: "love-button",
-      order: 7,
-      isButton: true,
-      html: {
-        isCustomSVG: true,
-        inner: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
-                  <use class="pswp__icn-shadow"></use>
-                  <path d="M16 23.35l-1.45-1.32C10.4 18.36 8 15.28 8 12.5 8 10.42 9.42 9 11.5 9c1.74 0 3.41.81 4.5 2.09C17.09 9.81 18.76 9 20.5 9 22.58 9 24 10.42 24 12.5c0 2.78-2.4 5.86-6.55 9.54L16 23.35z" id="pswp__icn-love"></path>
-                </svg>`,
-        outlineID: "pswp__icn-love"
-      },
-      onInit: (el, pswp) => {
-        el.setAttribute("title", "Love");
-        el.className = "pswp__button pswp__button--love";
-        el.addEventListener('click', () => {
-          const photoId = getPhotoId(pswp.currSlide.data.element);
-          sendFeedback('love', photoId, el, pswp);
-        });
-      }
-    });
-  });
-}
+  }
 
   // Register the download button only if galleryDownload is true
   if (galleryDownload) {
