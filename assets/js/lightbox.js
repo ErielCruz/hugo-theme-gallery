@@ -4,7 +4,7 @@ import PhotoSwipeDynamicCaption from "./photoswipe/photoswipe-dynamic-caption-pl
 import * as params from "@params";
 
 // URL of your Flask app
-const API_URL = 'http://localhost:5000'; 
+const API_URL = 'https://api.select.erielcruz.com'; 
 
 // Helper function to get gallery name with better fallback logic
 function getGalleryName(gallery) {
