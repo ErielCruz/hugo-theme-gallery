@@ -75,6 +75,133 @@ body > main {
   height: 100%;
 }
 
+/* Feedback buttons group container */
+.pswp__feedback-group {
+  display: flex;
+  margin-right: 25px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+}
+
+/* Individual feedback buttons */
+.pswp__button--keep,
+.pswp__button--like,
+.pswp__button--love {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Make icons bigger and consistent */
+.pswp__button--keep .pswp__icn,
+.pswp__button--like .pswp__icn,
+.pswp__button--love .pswp__icn {
+  width: 32px;
+  height: 32px;
+  fill: #fff;  /* Removed !important */
+  transition: all 0.3s ease;
+}
+
+/* Apply colors and animation */
+.pswp__button--keep.pswp__button--selected .pswp__icn {
+  animation: selectedFeedback 2s ease-in-out;
+  fill: #4CAF50;
+}
+
+.pswp__button--like.pswp__button--selected .pswp__icn {
+  animation: selectedFeedback 2s ease-in-out;
+  fill: #FFD700;
+}
+
+.pswp__button--love.pswp__button--selected .pswp__icn {
+  animation: selectedFeedback 2s ease-in-out;
+  fill: #FF4081;
+}
+
+/* Scale animation */
+@keyframes selectedFeedback {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.2); }
+  80% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Animation to return to white */
+@keyframes returnToWhite {
+  to { fill: #fff; }
+}
+
+/* Combine animations */
+.pswp__button--keep.pswp__button--selected .pswp__icn,
+.pswp__button--like.pswp__button--selected .pswp__icn,
+.pswp__button--love.pswp__button--selected .pswp__icn {
+  animation: selectedFeedback 2s ease-in-out, returnToWhite 0s 2s forwards;
+}
+
+/* Hover effects */
+.pswp__button--keep:hover .pswp__icn,
+.pswp__button--like:hover .pswp__icn,
+.pswp__button--love:hover .pswp__icn {
+  transform: scale(1.1);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .pswp__feedback-group {
+      margin-right: 15px;
+  }
+  .pswp__button--keep,
+  .pswp__button--like,
+  .pswp__button--love {
+      width: 50px;
+      height: 50px;
+  }
+  .pswp__button--keep .pswp__icn,
+  .pswp__button--like .pswp__icn,
+  .pswp__button--love .pswp__icn {
+      width: 28px;
+      height: 28px;
+  }
+}
+
+/* Toast notification styling */
+.pswp__feedback-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  padding: 20px 40px;  /* Increased padding */
+  border-radius: 20px;
+  font-size: 32px;
+  font-weight: bold;  /* Makes text more visible */
+  z-index: 2500;
+  animation: toast-fade 2s ease-out forwards;
+}
+
+/* Specific background colors for each reaction */
+.pswp__feedback-toast--keep {
+  background: rgba(76, 175, 80, 0.9);  /* #4CAF50 with opacity */
+}
+
+.pswp__feedback-toast--like {
+  background: rgba(255, 215, 0, 0.9);  /* #FFD700 with opacity */
+  color: black;  /* Better contrast for yellow background */
+}
+
+.pswp__feedback-toast--love {
+  background: rgba(255, 64, 129, 0.9);  /* #FF4081 with opacity */
+}
+
+@keyframes toast-fade {
+  0% { opacity: 0; transform: translate(-50%, -30%); }
+  10% { opacity: 1; transform: translate(-50%, -50%); }
+  90% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -70%); }
+}
+
 .hero-section {
   height: calc(100vh - 4rem); /* Adjust height to account for the header */
   margin-bottom: 6em;
