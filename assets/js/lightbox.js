@@ -3,13 +3,8 @@ import PhotoSwipe from "./photoswipe/photoswipe.esm.js";
 import PhotoSwipeDynamicCaption from "./photoswipe/photoswipe-dynamic-caption-plugin.esm.min.js";
 import * as params from "@params";
 
-// Fix: Remove trailing slash from worker URL
-const WORKER_URL = 'https://photo-feedback.main-domains.workers.dev';
-
-// Helper function to construct API URLs correctly
-function getApiUrl(endpoint) {
-  return `${WORKER_URL}/api/${endpoint}`.replace(/([^:]\/)\/+/g, "$1");
-}
+// URL of your Flask app
+const API_URL = 'http://localhost:5000'; 
 
 // Helper function to get gallery name with better fallback logic
 function getGalleryName(gallery) {
@@ -46,7 +41,7 @@ async function sendFeedback(reaction, photoId, buttonElement, pswp) {
   const galleryName = getGalleryName(gallery);
 
   try {
-    const response = await fetch(getApiUrl('feedback'), {
+    const response = await fetch(`${API_URL}/feedback`, { // Use API_URL here
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -114,28 +109,6 @@ if (gallery) {
   // Only register feedback buttons if galleryFeedback is true
   if (galleryFeedback) {
     lightbox.on("uiRegister", () => {
-      // Keep Button (checkmark)
-      lightbox.pswp.ui.registerElement({
-        name: "keep-button",
-        order: 7,
-        isButton: true,
-        html: {
-          isCustomSVG: true,
-          inner: `<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 32 32" width="32" height="32">
-                    <use class="pswp__icn-shadow"></use>
-                    <path d="M13 19.17l-3.17-3.17-1.41 1.41L13 22 23 12l-1.41-1.41z" id="pswp__icn-keep"></path>
-                  </svg>`,
-          outlineID: "pswp__icn-keep"
-        },
-        onInit: (el, pswp) => {
-          el.setAttribute("title", "Keep");
-          el.className = "pswp__button pswp__button--keep";
-          el.addEventListener('click', () => {
-            const photoId = getPhotoId(pswp.currSlide.data.element);
-            sendFeedback('keep', photoId, el, pswp);
-          });
-        }
-      });
 
       // Like Button (star)
       lightbox.pswp.ui.registerElement({

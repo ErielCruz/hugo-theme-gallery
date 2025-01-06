@@ -1,4 +1,14 @@
 <section class="gallery">
+  {{ if .Params.feedback }}  
+    <div style="display: flex; justify-content: center; margin-top: 24px; margin-bottom: 48px;"> 
+      <a href="http://localhost:5000/download_feedback" download="feedback.json"> 
+        <button style="background-color: #722F37; color: white; border: none; padding: 12px 24px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 12px;">
+          Download Feedback
+        </button>
+      </a>
+    </div>
+  {{ end }}
+
   <div id="gallery" 
        style="opacity: 0; transition: opacity 0.5s ease-in-out; height: auto; overflow: hidden" 
        image-download="{{ .Params.download | default false }}"
