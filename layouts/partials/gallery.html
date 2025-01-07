@@ -225,9 +225,11 @@
     ];
   
     function updateVideoCounter() {
-      const totalVideos = videos.length;
-      let counterText = loadedVideos === 1 ? "1" : loadedVideos;
-      videoCounter.textContent = `${counterText} of ${totalVideos}`;
+      if (videoCounter) { // Check if videoCounter exists
+        const totalVideos = videos.length;
+        let counterText = loadedVideos === 1 ? "1" : loadedVideos;
+        videoCounter.textContent = `${counterText} of ${totalVideos}`;
+      }
     }
   
     function loadVideos() {
