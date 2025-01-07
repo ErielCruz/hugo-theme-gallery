@@ -5,7 +5,7 @@
 {{- else }}
     "short_name": "{{ .Site.Title }}",
 {{- end }}
-    "scope": "/",
+    "scope": "https://gallery.erielcruz.com/",
     "start_url": ".",
     "theme_color": "#16191D",
     "background_color": "#16191D",
